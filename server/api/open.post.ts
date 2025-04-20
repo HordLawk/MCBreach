@@ -3,6 +3,7 @@ import { Rcon } from "rcon-client"
 const waitThenClose = (rcon: Rcon) => new Promise((resolve) => {
     setTimeout(async () => {
         await rcon.send('whitelist on');
+        await rcon.end();
         resolve(true);
     }, 10000);
 });
