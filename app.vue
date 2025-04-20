@@ -31,10 +31,10 @@ const disableWhitelist = async () => {
     <NuxtRouteAnnouncer />
     <main>
         <ul class="sign">
-            <li v-for="{id, name} in data.players.sample" :key="id">{{ name }}</li>
+            <li class="text" v-for="{id, name} in data.players.sample" :key="id">{{ name }}</li>
         </ul>
         <button @click="disableWhitelist" :disabled="isDisabled"><img :src="isDisabled ? 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/8/82/Stone_Button_%28S%29_JE4.png' : 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/3/3f/Stone_Button_%28item%29_JE1.png'"/></button>
-        <div class="sign"><p>{{isDisabled ? 'SERVIDOR DESTRANCADO POR 10 SEGUNDOS' : 'Aperte para destrancar'}}</p></div>
+        <div class="sign"><p class="text">{{isDisabled ? 'SERVIDOR DESTRANCADO POR 10 SEGUNDOS' : 'Aperte para destrancar'}}</p></div>
     </main>
 </template>
 
@@ -44,21 +44,25 @@ main {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    width: 33vw;
     margin: auto;
-    gap: 1rem;
+    flex-direction: column;
     > * {
-        width: 100%;
-        text-align: center;
-        color: black;
-        font-size: 1.3rem;
-        padding-inline-start: 0;
+        width: 165px;
         aspect-ratio: 1/1;
         vertical-align: middle;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        margin: 0;
+        padding-inline-start: 0;
+    }
+    .text {
+        list-style-type: square;
+        text-align: center;
+        color: black;
+        font-size: 1.2rem;
+        line-height: 1;
     }
     > .sign {
         background-image: url('https://i.pinimg.com/736x/3e/25/e8/3e25e8ef0194063a4b39cb2c1fabd1d1.jpg');
@@ -69,6 +73,16 @@ main {
     > button {
         background: none;
         border: none;
+    }
+    @media screen and (min-aspect-ratio: 16/9) {
+        gap: 1vw;
+        > * {
+            width: 10.3vw;
+        }
+    }
+    @media screen and (min-width: 555px){
+        gap: 1rem;
+        flex-direction: row;
     }
 }
 </style>
