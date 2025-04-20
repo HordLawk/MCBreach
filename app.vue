@@ -1,20 +1,29 @@
 <script setup>
-const {data} = useFetch('/api/status', {pick: ['players']});
 const isDisabled = ref(false);
+const {data} = await useFetch('/api/status');
 let buttonPress, buttonUnpress;
+const refreshPlayers = async () => data.value = await $fetch('/api/status');
+const loopRefresh = () => {
+    setTimeout(async () => {
+        await refreshPlayers();
+        loopRefresh();
+    }, 60_000);
+}
 if (import.meta.client) {
     buttonPress = new Audio('https://minecraft.wiki/images/Stone_button_press.ogg?e35bd&format=original');
     buttonUnpress = new Audio('https://minecraft.wiki/images/Stone_button_unpress.ogg?52860&format=original');
+    loopRefresh();
 }
 const disableWhitelist = async () => {
-    buttonPress.play();
     const {status} = await $fetch.raw('/api/open', {method: 'POST'});
     if (status !== 201) return;
     isDisabled.value = true;
-    setTimeout(() => {
-        buttonUnpress.play();
+    buttonPress.play();
+    setTimeout(async () => {
         isDisabled.value = false;
-    }, 10000);
+        buttonUnpress.play();
+        await refreshPlayers();
+    }, 10_000);
 }
 </script>
 
