@@ -2,8 +2,8 @@
 const {data} = useFetch('/api/status');
 const isDisabled = ref(false);
 const disableWhitelist = async () => {
-    const {status} = await useFetch('/api/open', 'POST');
-    if (status.value !== 200) return;
+    const {status} = await $fetch.raw('/api/open', {method: 'POST'});
+    if (status !== 201) return;
     isDisabled.value = true;
     setTimeout(() => (isDisabled.value = false), 10000);
 }
