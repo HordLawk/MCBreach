@@ -12,6 +12,6 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    rconPassword: process.env.RCON_PASSWORD ?? '',
+    rconPassword: process.env.NUXT_RCON_PASSWORD ?? '',
   },
 })
