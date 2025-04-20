@@ -1,75 +1,43 @@
-# Nuxt Minimal Starter
+# MCBreach
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## Requirements
 
-## Setup
+- Minecraft server running on `localhost:25565` (default);
+- RCON enabled on `localhost:25575`;
+- Environment variables defined as shown [here](.env.example).
 
-Make sure to install dependencies:
+## Dependencies
 
-```bash
-# npm
-npm install
+- [git](https://git-scm.com/downloads);
+- [Docker](https://docs.docker.com/engine/install/).
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
+## Download
 
 ```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+git clone https://github.com/HordLawk/MCBreach.git
 ```
 
-## Production
-
-Build the application for production:
+## Build
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+cd MCBreach
+sudo docker build -t mcbreach .
 ```
 
-Locally preview production build:
+## Deploy
+
+Runs on port `3000`.
 
 ```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
+sudo docker run -d --network=host --name mcbreach mcbreach
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Update
+
+```bash
+git pull
+sudo docker build -t mcbreach .
+sudo docker stop mcbreach
+sudo docker rm mcbreach
+sudo docker run -d --network=host --name mcbreach mcbreach
+```
