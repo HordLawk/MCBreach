@@ -5,7 +5,7 @@ const waitThenClose = (rcon: Rcon) => new Promise((resolve) => {
         await rcon.send('whitelist on');
         await rcon.end();
         resolve(true);
-    }, 10000);
+    }, 10_000);
 });
 
 export default defineEventHandler(async (event) => {
