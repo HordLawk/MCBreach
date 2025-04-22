@@ -1,4 +1,6 @@
-<script setup>
+<script setup lang="ts">
+import type { Status } from '~/utils/types';
+
 useHead({
     link: [{
         rel: 'preload',
@@ -7,19 +9,13 @@ useHead({
     }],
 });
 const isDisabled = ref(false);
-const {data} = await useFetch('/api/status');
-let buttonPress, buttonUnpress;
-const refreshPlayers = async () => data.value = await $fetch('/api/status');
-const loopRefresh = () => {
-    setTimeout(async () => {
-        await refreshPlayers();
-        loopRefresh();
-    }, 60_000);
-}
+let data: Status | null = null;
+let buttonPress: HTMLAudioElement, buttonUnpress: HTMLAudioElement;
 if (import.meta.client) {
     buttonPress = new Audio('https://minecraft.wiki/images/Stone_button_press.ogg?e35bd&format=original');
     buttonUnpress = new Audio('https://minecraft.wiki/images/Stone_button_unpress.ogg?52860&format=original');
-    loopRefresh();
+    const eventSource = new EventSource('/api/status');
+    eventSource.onmessage = event => data = JSON.parse(event.data);
 }
 const disableWhitelist = async () => {
     const {status} = await $fetch.raw('/api/open', {method: 'POST'});
@@ -29,7 +25,6 @@ const disableWhitelist = async () => {
     setTimeout(async () => {
         isDisabled.value = false;
         buttonUnpress.play();
-        await refreshPlayers();
     }, 10_000);
 }
 </script>
@@ -38,7 +33,7 @@ const disableWhitelist = async () => {
     <NuxtRouteAnnouncer />
     <main>
         <ul class="sign">
-            <li class="text" v-for="{id, name} in data.players.sample" :key="id">{{ name }}</li>
+            <li class="text" v-if="data" v-for="{id, name} in data.players.sample" :key="id">{{ name }}</li>
         </ul>
         <button @click="disableWhitelist" :disabled="isDisabled">
             <img

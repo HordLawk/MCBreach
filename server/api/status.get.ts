@@ -1,23 +1,5 @@
 import protocol from 'minecraft-protocol';
-
-type Status = {
-    isModded: boolean;
-    version: {
-        name: string;
-        protocol: number;
-    };
-    players: {
-        max: number;
-        online: number;
-        sample?: {
-            name: string,
-            id: string,
-        }[];
-    };
-    description: string;
-    favicon?: string;
-    latency: number;
-}
+import type { Status } from '~/utils/types';
 
 const ping = () => {
     return new Promise((resolve, reject) => {
@@ -26,6 +8,16 @@ const ping = () => {
 }
 
 export default defineEventHandler(async (event) => {
-    const res = await ping() as Status;
-    return res;
+    const eventStream = createEventStream(event);
+    const pushToStream = async () => {
+        const res = await ping() as Status;
+        await eventStream.push(JSON.stringify(res));
+    }
+    pushToStream();
+    const interval = setInterval(pushToStream, 10_000);
+    eventStream.onClosed(async () => {
+        clearInterval(interval);
+        await eventStream.close();
+    });
+    return eventStream.send();
 })
