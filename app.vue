@@ -1,4 +1,11 @@
 <script setup>
+useHead({
+    link: [{
+        rel: 'preload',
+        as: 'image',
+        href: 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/8/82/Stone_Button_%28S%29_JE4.png',
+    }],
+});
 const isDisabled = ref(false);
 const {data} = await useFetch('/api/status');
 let buttonPress, buttonUnpress;
@@ -33,7 +40,15 @@ const disableWhitelist = async () => {
         <ul class="sign">
             <li class="text" v-for="{id, name} in data.players.sample" :key="id">{{ name }}</li>
         </ul>
-        <button @click="disableWhitelist" :disabled="isDisabled"><img :src="isDisabled ? 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/8/82/Stone_Button_%28S%29_JE4.png' : 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/3/3f/Stone_Button_%28item%29_JE1.png'"/></button>
+        <button @click="disableWhitelist" :disabled="isDisabled">
+            <img
+                :src="
+                    isDisabled
+                    ? 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/8/82/Stone_Button_%28S%29_JE4.png'
+                    : 'https://static.wikia.nocookie.net/minecraft_gamepedia/images/3/3f/Stone_Button_%28item%29_JE1.png'
+                "
+            />
+        </button>
         <div class="sign"><p class="text">{{isDisabled ? 'SERVIDOR DESTRANCADO POR 10 SEGUNDOS' : 'Aperte para destrancar'}}</p></div>
     </main>
 </template>
