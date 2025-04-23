@@ -9,13 +9,13 @@ useHead({
     }],
 });
 const isDisabled = ref(false);
-let data: Status | null = null;
+const data = ref<Status | null>(null);
 let buttonPress: HTMLAudioElement, buttonUnpress: HTMLAudioElement;
 if (import.meta.client) {
     buttonPress = new Audio('https://minecraft.wiki/images/Stone_button_press.ogg?e35bd&format=original');
     buttonUnpress = new Audio('https://minecraft.wiki/images/Stone_button_unpress.ogg?52860&format=original');
     const eventSource = new EventSource('/api/status');
-    eventSource.onmessage = event => data = JSON.parse(event.data);
+    eventSource.onmessage = event => data.value = JSON.parse(event.data);
 }
 const disableWhitelist = async () => {
     const {status} = await $fetch.raw('/api/open', {method: 'POST'});
